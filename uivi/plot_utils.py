@@ -65,7 +65,7 @@ def plot_samples(
     yy: np.ndarray,
     log_probs: np.ndarray,
 ) -> Tuple[Figure, np.ndarray]:
-    """Plot samples and contours."""
+    """Plot UI-VI samples and contours."""
 
     fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))
 
