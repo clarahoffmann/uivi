@@ -13,14 +13,11 @@ Example of UI-VI (red) on a banana-shaped distribution (blue):
 A large part of the code is based on the elegant HMC-VAE implementation of Haoran Peng (https://github.com/GavinPHR/HMC-VAE).
 
 # Setup:
-1. **Pre-commit hooks**: To set up the pre-commit hooks run
-```pre-commit install```
+1. *Pre-commit hooks*: 
+To set up the pre-commit hooks run ```pre-commit install```
 
-2. **Install poetry environment** Install the environment via
- 
-```poetry install```
-
-and register a kernel for the environment using
+2. *Install poetry environment*:
+Install the environment via ```poetry install```  and register a kernel for the environment using
 
 ```poetry run python -m ipykernel install --user --name "uivi"```
 
