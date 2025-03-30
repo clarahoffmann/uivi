@@ -1,1 +1,0 @@
-"""Banana-shaped distribution."""
