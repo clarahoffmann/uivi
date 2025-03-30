@@ -15,5 +15,5 @@ and register a kernel for the environment with
 ```poetry run python -m ipykernel install --user --name "uivi"```
 
 # ToDos:
-- [] Add VAE example
-- [] Set step size in HMC sampler dynamically 
+- [ ] Add VAE example
+- [ ] Set step size in HMC sampler dynamically 
