@@ -1,10 +1,12 @@
 """Hamiltonian Monte Carlo (HMC) for the reverse conditional."""
 
-import torch
-from torch import nn
 from typing import Callable
 
+import torch
+from torch import nn
 
+
+# pylint: disable = C0116
 class HMC(nn.Module):
     """Hamiltonian Monte Carlo implementation
     based on https://github.com/GavinPHR/HMC-VAE.
@@ -61,7 +63,10 @@ class HMC(nn.Module):
 
         accept = torch.log(torch.rand_like(log_accept_prob)) < log_accept_prob
         accept = accept.unsqueeze(dim=-1)
-        ret = x_new * accept + x_old * torch.logical_not(accept), accept.sum() / accept.numel()
+        ret = (
+            x_new * accept + x_old * torch.logical_not(accept),
+            accept.sum() / accept.numel(),
+        )
         return ret
 
     def forward(self, x):
