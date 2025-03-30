@@ -29,3 +29,10 @@ repos:
     hooks:
     -   id: pylint
         args: ['--disable=E0401,  C0103, R0913']
+
+# typing
+- repo: https://github.com/pre-commit/mirrors-mypy
+  rev: v1.7.1  
+  hooks:
+    - id: mypy
+      args: ["--ignore-missing-imports"]
