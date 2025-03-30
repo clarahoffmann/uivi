@@ -1,5 +1,6 @@
 """Utilities for plotting."""
 
+import lightning as L
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
@@ -8,7 +9,7 @@ from tqdm import tqdm
 from ui_encoder import UIEncoder
 
 
-def make_meshgrid(lims_x=(-2.5, 2.5), lims_y=(-8, 2), num_points=100):
+def make_meshgrid(lims_x=(-2.5, 2.5), lims_y=(-8, 2), num_points: int = 100):
     """Create a flattened tensor meshgrid."""
     xx, yy = np.meshgrid(
         np.linspace(*lims_x, num_points), np.linspace(*lims_y, num_points)
@@ -19,7 +20,7 @@ def make_meshgrid(lims_x=(-2.5, 2.5), lims_y=(-8, 2), num_points=100):
 
 
 def get_log_probs_banana(
-    mean: np.array, cov: np.array, grid: torch.tensor, m: int, n: int
+    mean: np.ndarray, cov: np.ndarray, grid: torch.tensor, m: int, n: int
 ):
     """Evaluate banana density over a meshgrid with dimension m,n"""
     encoder_true = UIEncoder(
@@ -32,7 +33,7 @@ def get_log_probs_banana(
     return log_probs
 
 
-def draw_uivi_samples(model, num_samples: int = 300):
+def draw_uivi_samples(model: L.LightningModule, num_samples: int = 300):
     """Generate samples from fitted UIVI model."""
     z_samples = []
     mus = []
@@ -49,7 +50,12 @@ def draw_uivi_samples(model, num_samples: int = 300):
     return z_samples, mus
 
 
-def plot_samples(z_samples, xx, yy, log_probs):
+def plot_samples(
+    z_samples: torch.tensor,
+    xx: np.ndarray,
+    yy: np.ndarray,
+    log_probs: np.ndarray,
+):
     """Plot samples and contours."""
 
     fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))
