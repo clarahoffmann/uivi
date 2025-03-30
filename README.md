@@ -9,7 +9,7 @@ Much of the code is based on the HMC-VAE implementation of Haoran Peng (https://
 1. **Pre-commit hooks**: To set up the pre-commit hooks run
 ```pre-commit install```
 
-2. **Install poerty environemtn** Install the environment via 
+2. **Install poetry environment** Install the environment via 
 ```poetry install```
 and register a kernel for the environment with
 ```poetry run python -m ipykernel install --user --name "uivi"```
