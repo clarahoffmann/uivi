@@ -23,6 +23,7 @@ class VAE(L.LightningModule):
         self.dim_z = dim_z
         self.dim_eps = dim_eps
         self.pz = Normal(0, 1)
+        self.dim_x = dim_x
 
         self.encoder = self.build_model(
             [dim_x + dim_eps] + latent_dims + [dim_z * 2]
@@ -57,7 +58,7 @@ class VAE(L.LightningModule):
         z_sample = mu + sigma * u_sample
 
         x_recon = self.decoder(z_sample)
-        return mu, z_sample, x[:, (self.dim_eps) :], sigma, x_recon
+        return mu, z_sample, epsilon, sigma, x_recon
 
     def decode(self, z_sample):
         return self.decoder(z_sample)
@@ -65,7 +66,9 @@ class VAE(L.LightningModule):
     def elbo_no_entropy(self, x, x_recon, z_sample):
 
         recon_loss = F.binary_cross_entropy_with_logits(
-            x_recon, x, reduction="mean"
+            x_recon, x, reduction="sum"
         )
 
-        return recon_loss - self.pz.log_prob(z_sample)
+        pz = self.pz.log_prob(z_sample).mean(dim=0)
+
+        return recon_loss - pz

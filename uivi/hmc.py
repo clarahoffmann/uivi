@@ -20,13 +20,14 @@ class HMC(nn.Module):
         dim: int,
         T: int,
         L: int,
+        step_size: torch.Tensor = torch.tensor(0.2),
     ):
         super().__init__()
         self.dim = dim
         self.log_prob: Callable = None  # type: ignore
         self.T = T
         self.L = L
-        self.step_size = torch.tensor(0.2)
+        self.step_size = step_size
 
     def register_log_prob(self, log_prob: Callable):
         self.log_prob = log_prob

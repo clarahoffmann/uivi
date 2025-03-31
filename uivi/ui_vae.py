@@ -19,16 +19,19 @@ class UIVAE(VAE):
         latent_dims: list[int],
         T: int,
         Ls=int,
+        step_size: torch.Tensor = torch.tensor(0.2),
     ):
 
         super().__init__(dim_x, dim_eps, dim_z, latent_dims)
-        self.hmc = HMC(sum(latent_dims), T, Ls)
+        self.hmc = HMC(sum(latent_dims), T, Ls, step_size)
 
-    def register_log_prob(self, z_samples):
+    def register_log_prob(self, x, z_samples):
         def log_prob(epsilon):
             is_train = self.training
             self.eval()
-            mu_sample, _, _, sigma_sample = self.forward(epsilon)
+            mu_sample, _, _, sigma_sample, _ = self.forward(
+                x=x, epsilon=epsilon
+            )
 
             if is_train:
                 self.train()
@@ -36,8 +39,8 @@ class UIVAE(VAE):
 
         self.hmc.register_log_prob(log_prob)
 
-    def run_hmc(self, epsilon, z):
-        self.register_log_prob(z)
+    def run_hmc(self, x, epsilon, z):
+        self.register_log_prob(x, z)
         epsilon_samples, accept_prob = self.hmc(epsilon.detach().clone())
         return epsilon_samples, accept_prob
 
