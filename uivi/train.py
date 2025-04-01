@@ -6,21 +6,35 @@ from torch.distributions import MultivariateNormal
 from tqdm import tqdm
 
 
-def get_ent_grad(model, epsilon, z_sample, num_hmc_samples, mu, sigma):
+# pylint: disable = R0914
+def get_ent_grad(
+    model, epsilon, z_sample, num_hmc_samples, mu, sigma, mode="vae"
+):
     """Compute entropy term of gradient."""
     with torch.no_grad():
         # run hmc for reverse conditional
-        eps_prime, accept_prob = model.run_hmc(epsilon, z_sample)
-        mu_prime, _, _, sigma_sample_prime = model.forward(
-            eps_prime.reshape(-1, model.dim_eps)
-        )
+        if mode == "vae":
+            x = epsilon[:, : -model.dim_eps].detach().clone()
+            epsilon = epsilon[:, -model.dim_eps :].detach().clone()
+            eps_prime, accept_prob = model.run_hmc(x, epsilon, z_sample)
+
+            x_prime = x.unsqueeze(0).repeat(num_hmc_samples, 1, 1)
+            mu_prime, _, _, sigma_sample_prime, _ = model.forward(
+                x=x_prime.reshape(-1, model.dim_x),
+                epsilon=eps_prime.reshape(-1, model.dim_eps),
+            )
+            bs = x.shape[0]
+        elif mode == "banana":
+            eps_prime, accept_prob = model.run_hmc(epsilon, z_sample)
+            mu_prime, _, _, sigma_sample_prime = model.forward(
+                eps_prime.reshape(-1, model.dim_eps)
+            )
+            bs = model.num_eps_samples
 
         # reshape to account for hmc sample dim
-        mu_prime = mu_prime.reshape(
-            num_hmc_samples, model.num_eps_samples, model.dim_z
-        )
+        mu_prime = mu_prime.reshape(num_hmc_samples, bs, model.dim_z)
         sigma_sample_prime = sigma_sample_prime.reshape(
-            num_hmc_samples, model.num_eps_samples, model.dim_z
+            num_hmc_samples, bs, model.dim_z
         )
         z_sample_prime = z_sample.unsqueeze(0).repeat(num_hmc_samples, 1, 1)
 
