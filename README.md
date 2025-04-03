@@ -21,6 +21,13 @@ Install the environment via ```poetry install```  and register a kernel for the 
 
 ```poetry run python -m ipykernel install --user --name "uivi"```
 
-# ToDos:
+# ToDos:s
 - [ ] Add VAE example
 - [ ] Set step size in HMC sampler dynamically 
+
+# Caveats
+*Latent Dimension:* Unlike in classic VAEs, there is no bottleneck needed for the latent z. The opposite holds, the VAE + UI-VI only produces good fits for large latent dimensions.
+For example, with 14x14 MNIST images, the layer dimensions $[14*14, 64, 64, 70]$ worked well for the encoder. In the original paper, it's recommended to set the latent dimension to 200.
+This resulted in pretty slow training.
+
+*Adapting the HMC step size*: The HMC step size is adapted with RMSprop as in the original paper. Still, this often resulted in large steps for epsilon prime. When passing these values through the network, NaNs were generated. To prevent this, I added gradient clamping in the sampler. The clamping threshold is purely heuristic. This can probably be handled more elegantly :) Replacing standard HMC with a NUTS sampler would probably be the best alternative.
