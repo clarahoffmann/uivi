@@ -24,9 +24,9 @@ A large part of the code is based on the elegant HMC-VAE implementation of Haora
 To set up the pre-commit hooks run ```pre-commit install```
 
 2. *Install poetry environment*:
-Install the environment via ```poetry install```  and register a kernel for the environment using
+Install the environment via ```poetry build``` and ```poetry install --only main```` to activate repo level imports.
+Then register a kernel for the notebooks using ```poetry run python -m ipykernel install --user --name "uivi"```.
 
-```poetry run python -m ipykernel install --user --name "uivi"```
 
 # Caveats
 *Latent Dimension:* Unlike in classic VAEs, there is no bottleneck needed for the latent z. The opposite holds, the VAE + UI-VI only produces good fits for large latent dimensions.

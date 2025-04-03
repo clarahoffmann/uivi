@@ -1,9 +1,10 @@
 """UIVI encoder class."""
 import lightning as L
 import torch
-from hmc import HMC
 from torch import nn
 from torch.distributions import MultivariateNormal, Normal
+
+from uivi.hmc.hmc import HMC
 
 
 # pylint: disable = C0116, R0902
