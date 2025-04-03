@@ -2,13 +2,20 @@
 
 This repository implements Unbiased-Implicit Variational Inference (UI-VI) ([Titsias \& Ruiz, 2019](https://proceedings.mlr.press/v89/titsias19a/titsias19a.pdf)) in PyTorch.
 UI-VI allows to fit flexible variational distributions by training a simple neural network.
+Two examples from the original paper are replicated:
 
-Example of UI-VI (red) on a banana-shaped distribution (blue):
+### Banana-shaped distribution
+Samples generated with a fitted UI-VI (red) on a banana-shaped distribution (blue):
 <div align="center">
-  <img src="https://raw.githubusercontent.com/clarahoffmann/uivi/main/uivi/banana.png" alt="Banana distribution" width="700"/>
+  <img src="https://raw.githubusercontent.com/clarahoffmann/uivi/main/uivi/banana.png" alt="Banana distribution" width="500"/>
 </div>
 
-
+### VAE trained on MNIST
+Original (left) and reconstructed (left) images
+<div align="center">
+  <img src="https://github.com/clarahoffmann/uivi/blob/main/uivi/original_images.png" alt="Original MNIST images" width="300"/>
+  <img src="https://github.com/clarahoffmann/uivi/blob/main/uivi/reconstructed_images.png" alt="Original MNIST images" width="300"/>
+</div>
 
 A large part of the code is based on the elegant HMC-VAE implementation of Haoran Peng (https://github.com/GavinPHR/HMC-VAE).
 
@@ -20,10 +27,6 @@ To set up the pre-commit hooks run ```pre-commit install```
 Install the environment via ```poetry install```  and register a kernel for the environment using
 
 ```poetry run python -m ipykernel install --user --name "uivi"```
-
-# ToDos:s
-- [ ] Add VAE example
-- [ ] Set step size in HMC sampler dynamically 
 
 # Caveats
 *Latent Dimension:* Unlike in classic VAEs, there is no bottleneck needed for the latent z. The opposite holds, the VAE + UI-VI only produces good fits for large latent dimensions.
