@@ -136,9 +136,11 @@ def plot_mnist_samples(model, test_loader, img_dim=14):
         return x
 
     def show_image(img):
+        fig = plt.figure()
         img = to_img(img)
         npimg = img.numpy()
         plt.imshow(np.transpose(npimg, (1, 2, 0)))
+        return fig
 
     def reshape_for_plotting(img_batch):
         return img_batch.view(-1, 1, img_dim, img_dim)
@@ -146,24 +148,28 @@ def plot_mnist_samples(model, test_loader, img_dim=14):
     def visualise_output(images, model):
 
         with torch.no_grad():
+            fig = plt.figure()
             _, _, _, _, images_recon = model(images)
             images_recon = torch.sigmoid(
                 images_recon.view(-1, 1, img_dim, img_dim)
             )
             np_imagegrid = utils.make_grid(images_recon[1:50], 10, 5).numpy()
             plt.imshow(np.transpose(np_imagegrid, (1, 2, 0)))
+            plt.axis("off")
             plt.show()
-        return images_recon
+        return images_recon, fig
 
     images, _ = next(iter(test_loader))
 
     # First visualise the original images
     print("Original images")
-    show_image(utils.make_grid(reshape_for_plotting(images[1:50]), 10, 5))
+    fig_orig = show_image(
+        utils.make_grid(reshape_for_plotting(images[1:50]), 10, 5)
+    )
     plt.show()
 
     # Reconstruct and visualise the images using the vae
     print("VAE reconstruction:")
-    images_recon = visualise_output(images, model)
+    images_recon, fig_recon = visualise_output(images, model)
 
-    return images_recon
+    return images_recon, fig_orig, fig_recon
