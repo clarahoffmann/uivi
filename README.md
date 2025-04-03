@@ -11,7 +11,7 @@ Samples generated with a fitted UI-VI (red) on a banana-shaped distribution (blu
 </div>
 
 ### VAE trained on MNIST
-Original (left) and reconstructed (left) images
+Original (left) and reconstructed (right) images
 <div align="center">
   <img src="https://github.com/clarahoffmann/uivi/blob/main/uivi/original_images.png" alt="Original MNIST images" width="300"/>
   <img src="https://github.com/clarahoffmann/uivi/blob/main/uivi/reconstructed_images.png" alt="Original MNIST images" width="300"/>
