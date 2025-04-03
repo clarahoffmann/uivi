@@ -24,7 +24,7 @@ A large part of the code is based on the elegant HMC-VAE implementation of Haora
 To set up the pre-commit hooks run ```pre-commit install```
 
 2. *Install poetry environment*:
-Install the environment via ```poetry build``` and ```poetry install --only main```` to activate repo level imports.
+Install the environment via ```poetry install --only main```.
 Then register a kernel for the notebooks using ```poetry run python -m ipykernel install --user --name "uivi"```.
 
 
