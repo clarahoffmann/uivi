@@ -8,6 +8,7 @@ import numpy as np
 import seaborn as sns
 import torch
 from matplotlib.figure import Figure
+from torchvision import utils
 from tqdm import tqdm
 from ui_encoder import UIEncoder
 
@@ -100,3 +101,45 @@ def plot_samples(
     plt.show()
 
     return fig, axs
+
+
+def plot_mnist_samples(model, test_loader, img_dim=14):
+    """Plot a grid of true and predicted MNIST images."""
+    model.eval()
+
+    def to_img(x):
+        x = x.clamp(0, 1)
+        return x
+
+    def show_image(img):
+        img = to_img(img)
+        npimg = img.numpy()
+        plt.imshow(np.transpose(npimg, (1, 2, 0)))
+
+    def reshape_for_plotting(img_batch):
+        return img_batch.view(-1, 1, img_dim, img_dim)
+
+    def visualise_output(images, model):
+
+        with torch.no_grad():
+            _, _, _, _, images_recon = model(images)
+            images_recon = torch.sigmoid(
+                images_recon.view(-1, 1, img_dim, img_dim)
+            )
+            np_imagegrid = utils.make_grid(images_recon[1:50], 10, 5).numpy()
+            plt.imshow(np.transpose(np_imagegrid, (1, 2, 0)))
+            plt.show()
+        return images_recon
+
+    images, _ = next(iter(test_loader))
+
+    # First visualise the original images
+    print("Original images")
+    show_image(utils.make_grid(reshape_for_plotting(images[1:50]), 10, 5))
+    plt.show()
+
+    # Reconstruct and visualise the images using the vae
+    print("VAE reconstruction:")
+    images_recon = visualise_output(images, model)
+
+    return images_recon
