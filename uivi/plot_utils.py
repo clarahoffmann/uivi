@@ -140,6 +140,7 @@ def plot_mnist_samples(model, test_loader, img_dim=14):
         img = to_img(img)
         npimg = img.numpy()
         plt.imshow(np.transpose(npimg, (1, 2, 0)))
+        plt.axis("off")
         return fig
 
     def reshape_for_plotting(img_batch):
