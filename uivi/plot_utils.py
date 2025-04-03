@@ -8,6 +8,7 @@ import numpy as np
 import seaborn as sns
 import torch
 from matplotlib.figure import Figure
+from numpy.lib.stride_tricks import sliding_window_view
 from torchvision import utils
 from tqdm import tqdm
 from ui_encoder import UIEncoder
@@ -101,6 +102,29 @@ def plot_samples(
     plt.show()
 
     return fig, axs
+
+
+def plot_losses(losses_mod, losses_ent):
+    """Plot the components of the training loss:
+    mode, entropy and mode + entropy (full ELBO)."""
+    fig, axs = plt.subplots(nrows=1, ncols=3, figsize=(10, 3))
+    window_size = 100
+    mod = sliding_window_view(losses_mod, window_shape=window_size)
+    ent = sliding_window_view(losses_ent, window_shape=window_size)
+
+    axs[0].plot(np.mean(mod, axis=-1))
+    axs[0].set_title(r"Mode $- p(z)$ ($\downarrow$)")
+
+    axs[1].plot(np.mean(ent, axis=-1))
+    axs[1].set_title(r"Entropy $q(z)$ ($\uparrow$)")
+
+    axs[2].plot(-np.mean(mod - ent, axis=-1))
+    axs[2].set_title(r" ELBO $\uparrow$")
+
+    fig.suptitle("Losses", fontsize=16)
+    fig.subplots_adjust(top=0.80)
+
+    plt.show()
 
 
 def plot_mnist_samples(model, test_loader, img_dim=14):
